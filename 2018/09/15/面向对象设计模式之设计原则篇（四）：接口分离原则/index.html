@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（四）：接口分离原则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+Many client specific interfaces are better than one general purpose interface.
+多个特定的客户端接口要好于一个通用性的总接口。
+
+定义解读：
+
+客户端不应该依赖它不需要实现的接口；
+不建立庞大臃肿的接口，应尽量细化接">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（四）：接口分离原则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（四）：接口分离原则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%94%B1%E6%9D%A5"><span class="toc-text">问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-text">代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E7%82%B9"><span class="toc-text">需求点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>Many client specific interfaces are better than one general purpose interface.</p>
+<p>多个特定的客户端接口要好于一个通用性的总接口。</p>
+</blockquote>
+<p>定义解读：</p>
+<ul>
+<li>客户端不应该依赖它不需要实现的接口；</li>
+<li>不建立庞大臃肿的接口，应尽量细化接口，接口中的方法应该尽量少。</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>避免同一个接口里面包含不同职责的方法，接口责任划分更加明确，符合高内聚低耦合的思想。</li>
+</ul>
+<h2 id="问题由来"><a href="#问题由来" class="headerlink" title="问题由来"></a>问题由来</h2><p>类 A 通过接口 I 依赖类 B，类 C 通过接口 I 依赖类 D，如果接口 I 对于类 A 和类 B 来说不是最小接口，则类 B 和类 D 必须去实现它们不需要的方法。</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190314221514.jpg"></p>
+<blockquote>
+<p>说明：</p>
+<p>类 A 依赖接口 I 中的方法1、方法2、方法3，类 B 是对类 A 依赖的实现。类 C 依赖接口 I 中的方法1、方法4、方法5，类 D 是对类 C 依赖的实现。对于类 B 和类 D 来说，虽然他们都存在着用不到的方法（也就是图中红色字体标记的方法），但由于实现了接口 I，所以也必须要实现这些用不到的方法。</p>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>可以看到，如果接口过于臃肿，只要接口中出现的方法，不管对依赖于它的类有没有用处，实现类中都必须去实现这些方法，这显然不是好的设计。如果将这个设计修改为符合接口隔离原则，就必须对接口 I 进行拆分。在这里我们将原有的接口 I 拆分为三个接口，拆分后的设计如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190314221812.jpg"></p>
+<h2 id="代码讲解"><a href="#代码讲解" class="headerlink" title="代码讲解"></a>代码讲解</h2><p>下面通过一个餐厅服务的例子讲解一下接口分离原则。</p>
+<h4 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h4><p>现在的餐厅除了提供传统的店内服务，多数也都支持网上下单，网上支付功能。写一些接口方法来涵盖餐厅的所有的下单及支付功能。</p>
+<h4 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== RestaurantProtocol.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">RestaurantProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOnlineOrder;         <span class="comment">// 下订单：online</span></span><br><span class="line">- (<span class="keyword">void</span>)placeTelephoneOrder;      <span class="comment">// 下订单：通过电话</span></span><br><span class="line">- (<span class="keyword">void</span>)placeWalkInCustomerOrder; <span class="comment">// 下订单：在店里</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOnline;                <span class="comment">// 支付订单：online</span></span><br><span class="line">- (<span class="keyword">void</span>)payInPerson;              <span class="comment">// 支付订单：在店里支付</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里声明了一个接口，它包含了下单和支付的几种方式：</p>
+<ul>
+<li>下单：<ul>
+<li>online 下单</li>
+<li>电话下单</li>
+<li>店里下单（店内服务）</li>
+</ul>
+</li>
+<li>支付<ul>
+<li>online 支付（适用于 online 下单和电话下单的顾客）</li>
+<li>店里支付（店内服务）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里先不讨论电话下单的顾客是用 online 支付还是店内支付。</p>
+</blockquote>
+<p>对应的，我们有三种下单方式的顾客：</p>
+<ol>
+<li><p>online 下单，online 支付的顾客；</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== OnlineClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;RestaurantProtocol.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">OnlineClient</span> : <span class="title">NSObject</span>&lt;<span class="title">RestaurantProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== OnlineClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">OnlineClient</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOnlineOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place on line order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeTelephoneOrder &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeWalkInCustomerOrder &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOnline &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay on line&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payInPerson &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+<li><p>电话下单，online 支付的顾客；</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== TelephoneClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;RestaurantProtocol.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TelephoneClient</span> : <span class="title">NSObject</span>&lt;<span class="title">RestaurantProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== TelephoneClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TelephoneClient</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOnlineOrder &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeTelephoneOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place telephone order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeWalkInCustomerOrder &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOnline &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay on line&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payInPerson &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+<li><p>在店里下单并支付的顾客。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== WalkinClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;RestaurantProtocol.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">WalkinClient</span> : <span class="title">NSObject</span>&lt;<span class="title">RestaurantProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== WalkinClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">WalkinClient</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOnlineOrder &#123;</span><br><span class="line">   <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeTelephoneOrder &#123;</span><br><span class="line">    <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeWalkInCustomerOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place walk in customer order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOnline &#123;</span><br><span class="line">   <span class="comment">// not necessarily</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payInPerson &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay in person&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>我们发现，并不是所有顾客都必须要实现 <em><strong>RestaurantProtocol</strong></em> 里面的所有方法。<strong>由于接口方法的设计造成了冗余，因此该设计不符合接口隔离原则。</strong></p>
+<blockquote>
+<p>注意，Objective-C 中的协议可以通过 <strong>@optional</strong> 关键字设置不需要必须实现的方法，该特性不与接口分离原则冲突，只要属于同一类责任的接口，都可以放入同一接口中。</p>
+</blockquote>
+<p>那么如何做才符合接口隔离原则呢？我们来看一下较好的设计。</p>
+<h4 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h4><p>要符合接口隔离原则，只需要将不同类型的接口分离出来即可。我们将原来的 <em><strong>RestaurantProtocol</strong></em> 接口拆分成两个接口：下单接口和支付接口。</p>
+<p>下单接口：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== RestaurantPlaceOrderProtocol.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">RestaurantPlaceOrderProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOrder;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>支付接口：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== RestaurantPaymentProtocol.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">RestaurantPaymentProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOrder;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>现在有了下单接口和支付接口，我们就可以让不同的客户来以自己的方式实现下单和支付操作了。</p>
+<p>首先创建一个所有客户的父类，来遵循这两个接口：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== Client.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;RestaurantPlaceOrderProtocol.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;RestaurantPaymentProtocol.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Client</span> : <span class="title">NSObject</span>&lt;<span class="title">RestaurantPlaceOrderProtocol</span>,<span class="title">RestaurantPaymentProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>接着令 online下单、电话下单、店内下单的顾客继承这个父类，分别实现这两个接口的方法：</p>
+<ol>
+<li><p>online 下单，online 支付的顾客</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== OnlineClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Client.h&quot;</span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">OnlineClient</span> : <span class="title">Client</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== OnlineClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">OnlineClient</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place on line order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay on line&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+<li><p>电话下单，online 支付的顾客</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== TelephoneClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Client.h&quot;</span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TelephoneClient</span> : <span class="title">Client</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== TelephoneClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TelephoneClient</span></span></span><br><span class="line">    </span><br><span class="line">- (<span class="keyword">void</span>)placeOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place telephone order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay on line&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+<li><p>在店里下单并支付的顾客</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== WalkinClient.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Client.h&quot;</span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">WalkinClient</span> : <span class="title">Client</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== WalkinClient.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">WalkinClient</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)placeOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;place walk in customer order&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)payOrder &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;pay in person&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>因为我们把不同的职责的接口拆开，使得接口的责任更加清晰，简洁明了。不同的客户端可以根据自己的需求遵循所需要的接口来以自己的方式实现。</p>
+<p>而且今后如果还有和下单或者支付相关的方法，也可以分别加入到各自的接口中，避免了接口的臃肿，同时也提高了程序的内聚性。</p>
+<p>下面来看一下这两个设计的 UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h4 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h4><p>未实践接口分离原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190216212835.jpg"></p>
+<p>实践了接口分离原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190216212910.jpg"></p>
+<blockquote>
+<p>通过遵守接口分离原则，接口的设计变得更加简洁，而且各种客户类不需要实现自己不需要实现的接口。</p>
+</blockquote>
+<h2 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h2><p>接口分离原则的含义是：建立单一接口，不要建立庞大臃肿的接口，尽量细化接口，接口中的方法尽量少。也就是说，我们要为各个类建立专用的接口，而不要试图去建立一个很庞大的接口供所有依赖它的类去调用。在程序设计中，依赖几个专用的接口要比依赖一个综合的接口更灵活。接口是设计时对外部设定的 “契约”，通过分散定义多个接口，可以预防外来变更的扩散，提高系统的灵活性和可维护性。</p>
+<p>说到这里，很多人会觉得接口隔离原则跟之前的单一职责原则很相似，其实不然。其一：单一职责原则原注重的是职责，而接口隔离原则注重接口依赖的隔离；其二：单一职责原则主要是约束类，其次才是接口和方法，它针对的是程序中的实现和细节，而接口隔离原则主要约束接口，主要针对抽象，针对程序整体框架的构建。</p>
+<p>在设计接口时，尤其是在向现有的接口添加方法时，我们需要仔细斟酌这些方法是否是处理同一类任务的：如果是则可以放在一起；如果不是则需要做拆分。</p>
+<p>做 iOS 开发的朋友对 <strong>UITableView</strong> 的 <em><strong>UITableViewDelegate</strong></em> 和 <em><strong>UITableViewDataSource</strong></em> 这两个协议应该会非常熟悉。这两个协议里的方法都是与 <strong>UITableView</strong> 相关的，但 iOS SDK 的设计者却把这些方法放在不同的两个协议中。原因就是这两个协议所包含的方法所处理的任务是不同的两种：</p>
+<ul>
+<li><em><strong>UITableViewDelegate</strong></em>：含有的方法是 <strong>UITableView</strong> 的实例告知其代理一些点击事件的方法，即<strong>事件的传递</strong>，方向是从 <strong>UITableView</strong> 的实例到其代理；</li>
+<li><em><strong>UITableViewDataSource</strong></em>：含有的方法是 <strong>UITableView</strong> 的代理传给 <strong>UITableView</strong> 一些必要数据供<strong>UITableView</strong> 展示出来，即<strong>数据的传递</strong>，方向是从 <strong>UITableView</strong> 的代理到 <strong>UITableView</strong>。</li>
+</ul>
+<p>很显然，<strong>UITableView</strong> 协议的设计者很好地实践了接口分离的原则，值得我们大家学习。</p>
+<p>采用接口隔离原则对接口进行约束时，要注意以下几点：</p>
+<ul>
+<li>接口尽量小，但是要有限度。对接口进行细化可以提高程序设计灵活性是不挣的事实，但是如果过小，则会造成接口数量过多，使设计复杂化。所以一定要适度。</li>
+<li>为依赖接口的类定制服务，只暴露给调用的类它需要的方法，它不需要的方法则隐藏起来。只有专注地为一个模块提供定制服务，才能建立最小的依赖关系。</li>
+<li>提高内聚，减少对外交互。使接口用最少的方法去完成最多的事情。</li>
+</ul>
+<p>运用接口隔离原则，一定要适度，接口设计的过大或过小都不好。设计接口的时候，只有多花些时间去思考和筹划，才能准确地实践这一原则。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

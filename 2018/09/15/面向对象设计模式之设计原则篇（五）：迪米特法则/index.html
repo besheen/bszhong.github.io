@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（五）：迪米特法则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+You only ask for objects which you directly need.
+一个对象应该对尽可能少的对象有接触，也就是只接触那些真正需要接触的对象。
+
+定义解读：
+迪米特法则也叫做最少知道原则（Least Know Principle），一个类应该只和它的成员变量、方法">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（五）：迪米特法则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（五）：迪米特法则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%94%B1%E6%9D%A5"><span class="toc-text">问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text"></span></a></li></ol></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>You only ask for objects which you directly need.</p>
+<p>一个对象应该对尽可能少的对象有接触，也就是只接触那些真正需要接触的对象。</p>
+</blockquote>
+<p>定义解读：</p>
+<p>迪米特法则也叫做最少知道原则（Least Know Principle），一个类应该只和它的成员变量、方法的输入、返回参数中的类作交流，而不应该引入其他的类（间接交流）。</p>
+<p>优点：</p>
+<p>实践迪米特法则可以良好地降低类与类之间的耦合，减少类与类之间的关联程度，让类与类之间的协作更加直接。</p>
+<h2 id="问题由来"><a href="#问题由来" class="headerlink" title="问题由来"></a>问题由来</h2><p>类与类之间的关系越密切，耦合度越大，当一个类发送改变时，对另一个类的影响也越大。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>尽量降低类与类之间的耦合。</p>
+<p>自从我们接触编程开始，就知道了软件编程总的原则：低耦合，高内聚。无论是面向过程编程还是面向对象编程，只有使各个模块之间的耦合尽量的低，才能提高代码的复用率。低耦合的优点不言而喻，但是怎么样编程才能做到低耦合呢？那正是迪米特法则要去完成的。</p>
+<p>通俗来讲，就是一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类来说，无论逻辑多么复杂，都尽量地将逻辑封装在类的内部，对外除了提供 Public 方法，不对外泄漏任何信息。</p>
+<p>狭义迪米特法则：如果两个类不必彼此直接通信，那么这两个类就不应该发生直接的相互作用，如果一个类想要调用另一个类的方法时，可以通过第三个类转发这个调用。</p>
+<p>迪米特法则还有一个更简单的定义：<strong>只与直接的朋友通信</strong>。首先来解释一下什么是直接的朋友：每个对象都会与其他对象有耦合关系，只要两个对象之间有耦合关系，我们就说这两个对象之间是朋友关系。耦合的方式很多，依赖、关联、组合、聚合等。其中，我们称出现成员变量、方法参数、方法返回值中的类为<strong>直接的朋友</strong>，而出现在局部变量中的类则不是直接的朋友。也就是说，陌生的类最好不要作为局部变量的形式出现在类的内部。</p>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>设计一个汽车类，包含汽车的品牌名称，引擎等成员变量。提供一个方法返回引擎的品牌名称。</p>
+<h4 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h4><p><strong>Car</strong> 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">//================== Car.h ==================</span><br><span class="line">@class GasEngine;</span><br><span class="line">@interface Car : NSObject</span><br><span class="line"></span><br><span class="line">//构造方法</span><br><span class="line">- (instancetype)initWithEngine:(GasEngine *)engine;</span><br><span class="line"></span><br><span class="line">//返回私有成员变量：引擎的实例</span><br><span class="line">- (GasEngine *)usingEngine;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//================== Car.m ==================</span><br><span class="line">#import &quot;Car.h&quot;</span><br><span class="line">#import &quot;GasEngine.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Car &#123;</span><br><span class="line">    GasEngine *_engine;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (instancetype)initWithEngine:(GasEngine *)engine &#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        _engine = engine;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (GasEngine *)usingEngine &#123;</span><br><span class="line">    return _engine;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出，<strong>Car</strong> 的构造方法需要传入一个引擎的实例对象。而且因为引擎的实例对象被赋到了 <strong>Car</strong> 对象的私有成员变量里面。所以 <strong>Car</strong> 类给外部提供了一个返回引擎对象的方法：<code>usingEngine</code>。</p>
+<p>而这个引擎类 <strong>GasEngine</strong> 有一个品牌名称的成员变量 <code>brandName</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//================== GasEngine.h ==================</span><br><span class="line">@interface GasEngine : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy) NSString *brandName;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，客户端就可以拿到引擎的品牌名称了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//================== Client.m ==================</span><br><span class="line">#import &quot;GasEngine.h&quot;</span><br><span class="line">#import &quot;Car.h&quot;</span><br><span class="line"></span><br><span class="line">- (NSString *)findCarEngineBrandName:(Car *)car &#123;</span><br><span class="line">    GasEngine *engine = [car usingEngine];</span><br><span class="line">    NSString *engineBrandName = engine.brandName;//获取到了引擎的品牌名称</span><br><span class="line">    return engineBrandName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的设计完成了需求，但是却违反了迪米特法则。根据迪米特法则，只与直接的朋友发生通信，而在<strong>客户端的 <code>findCarEngineBrandName:</code> 中引入了和入参（Car）和返回值（NSString）无关的 GasEngine 对象，GasEngine 类并不是 客户端的直接朋友（以局部变量出现的耦合不属于直接朋友），从逻辑上讲客户端只与 Car 类耦合就行，与 Car 的 GasEngine 并没有任何联系，这样的设计显然是增加客户端与 GasEngine 不必要的耦合</strong>。</p>
+<p>按照迪米特法则，应该避免类中出现这样非直接朋友关系的耦合。</p>
+<h4 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h4><p>同样是 <strong>Car</strong> 这个类，我们去掉原有的返回引擎对象的方法，而是增加一个直接返回引擎品牌名称的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (NSString *)usingEngineBrandName &#123;</span><br><span class="line">    return _engine.brand;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>usingEngineBrandName</code> 方法直接返回了引擎的品牌名称，所以在客户端里面就可以直接拿到这个值，而不需要间接地通过原来的 <strong>GasEngine</strong> 实例来获取。</p>
+<p>我们来看一下客户端操作的变化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//================== Client.m ==================</span><br><span class="line">#import &quot;Car.h&quot;</span><br><span class="line"></span><br><span class="line">- (NSString *)findCarEngineBrandName:(Car *)car &#123;</span><br><span class="line">    NSString *engineBrandName = [car usingEngineBrandName]; //直接获取到了引擎的品牌名称</span><br><span class="line">    return engineBrandName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与之前的设计不同，在客户端里面，没有引入 <strong>GasEngine</strong> 类，而是直接通过 <strong>Car</strong> 实例获取到了需要的数据。</p>
+<p>这样设计的好处是，如果这辆车的引擎换成了电动引擎(原来的 <strong>GasEngine</strong> 类换成了 <strong>ElectricEngine</strong> 类)，<strong>客户端代码可以不做任何修改</strong>！因为它没有引入任何引擎类，而是直接获取了引擎的品牌名称。</p>
+<p>所以在这种情况下我们只需要修改 <strong>Car</strong> 类的 <code>usingEngineBrandName</code> 方法实现，将新引擎的品牌名称返回即可。</p>
+<p>下面来看一下这两个设计的UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h4 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h4><p>未实践迪米特法则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190216224054.jpg"></p>
+<p>实践了迪米特法则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190216224111.jpg"></p>
+<blockquote>
+<p>很明显，在实践了迪米特法则的 UML 类图里面，没有了 <strong>Client</strong> 对 <strong>GasEngine</strong> 的依赖，耦合性降低。</p>
+</blockquote>
+<h2 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h2><p>今后在做对象与对象之间交互的设计时，应该极力避免引出中间对象的情况（需要导入其他对象的类）：需要什么对象直接返回即可，降低类之间的耦合度。</p>
+<p>涉及的设计模式有：外观模式，中介者模式。</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4>
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（六）：里氏替换原则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+In a computer program, if S is a subtype of T, then objects of type T may be replaced with objects of type S (i.e. an object of type T may be subst">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（六）：里氏替换原则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（六）：里氏替换原则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E7%82%B9"><span class="toc-text">需求点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E8%AF%9D"><span class="toc-text">最后的话</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>In a computer program, if S is a subtype of T, then objects of type T may be replaced with objects of type S (i.e. an object of type T may be substituted with any object of a subtype S) without altering any of the desirable properties of the program (correctness, task performed, etc.)</p>
+<p>所有引用基类的地方必须能透明地使用其子类的对象，也就是说子类对象可以替换其父类对象，而程序执行效果不变。</p>
+</blockquote>
+<p>定义解读：</p>
+<p>在继承体系中，子类中可以增加自己特有的方法，也可以实现父类的抽象方法，但是不能重写父类的非抽象方法，否则该继承关系就不是一个正确的继承关系。</p>
+<p>优点：</p>
+<p>可以检验继承使用的正确性，约束继承在使用上的泛滥。</p>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>在这里用一个简单的长方形与正方形的例子讲解一下里氏替换原则。</p>
+<h4 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h4><p>创建两个类：长方形和正方形，都可以设置宽高（边长），也可以输出面积大小。</p>
+<h4 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h4><p>首先声明一个长方形类，然后让正方形类继承于长方形。</p>
+<p>长方形类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//================== Rectangle.h ==================</span><br><span class="line">@interface Rectangle : NSObject &#123;</span><br><span class="line">    @protected double _width;</span><br><span class="line">    @protected double _height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 设置宽高</span><br><span class="line">- (void)setWidth:(double)width;</span><br><span class="line">- (void)setHeight:(double)height;</span><br><span class="line"></span><br><span class="line">// 获取宽高</span><br><span class="line">- (double)width;</span><br><span class="line">- (double)height;</span><br><span class="line"></span><br><span class="line">// 获取面积</span><br><span class="line">- (double)getArea;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//================== Rectangle.m ==================</span><br><span class="line">@implementation Rectangle</span><br><span class="line"></span><br><span class="line">- (void)setWidth:(double)width &#123;</span><br><span class="line">    _width = width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setHeight:(double)height &#123;</span><br><span class="line">    _height = height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)width &#123;</span><br><span class="line">    return _width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)height &#123;</span><br><span class="line">    return _height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)getArea &#123;</span><br><span class="line">    return _width * _height;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>正方形类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//================== Square.h ==================</span><br><span class="line">@interface Square : Rectangle</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//================== Square.m ==================</span><br><span class="line"></span><br><span class="line">@implementation Square</span><br><span class="line"></span><br><span class="line">- (void)setWidth:(double)width &#123;</span><br><span class="line">    _width = width;</span><br><span class="line">    _height = width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setHeight:(double)height &#123;</span><br><span class="line">    _width = height;</span><br><span class="line">    _height = height;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，正方形类继承了长方形类以后，为了保证边长永远是相等的，特意在两个 set 方法里面强制将宽和高都设置为传入的值，也就是重写了父类 <strong>Rectangle</strong> 的两个 set 方法。但是里氏替换原则里规定，子类不能重写父类的方法，所以上面的设计是违反该原则的。</p>
+<p>而且里氏替换原则里面所说：子类对象能够替换父类对象，而程序执行效果不变。我们通过一个例子来看一下上面的设计是否符合。</p>
+<p>在客户端类写一个方法：传入一个 <strong>Rectangle</strong> 类型并返回它的面积：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (double)calculateAreaOfRect:(Rectangle *)rect &#123;</span><br><span class="line">    return rect.getArea;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们先用 <strong>Rectangle</strong> 对象试一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Rectangle *rect = [[Rectangle alloc] init];</span><br><span class="line">rect.width = 10;</span><br><span class="line">rect.height = 20;</span><br><span class="line">    </span><br><span class="line">double rectArea = [self calculateAreaOfRect:rect];  // output:200</span><br></pre></td></tr></table></figure>
+
+<p>长宽分别设置为10、20以后，结果输出200，没有问题。</p>
+<p>现在我们使用 <strong>Rectangle</strong> 的子类 <strong>Square</strong> 的对象替换原来的 <strong>Rectangle</strong> 对象，看一下结果如何：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Square *square = [[Square alloc] init];</span><br><span class="line">square.width = 10;</span><br><span class="line">square.height = 20;</span><br><span class="line">    </span><br><span class="line">double squareArea = [self calculateAreaOfRect:square];  // output:400</span><br></pre></td></tr></table></figure>
+
+<p>结果输出为400，结果不一致，再次说明了上述设计不符合里氏替换原则，因为子类的对象 <strong>square</strong> 替换父类的对象 <strong>rect</strong> 以后，程序执行的结果变了。</p>
+<p>不符合里氏替换原则就说明该继承关系不是正确的继承关系，也就是说正方形类不能继承于长方形类，程序需要重新设计。</p>
+<p>我们现在看一下比较好的设计：</p>
+<h4 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h4><p>既然正方形不能继承于长方形，那么是否可以让二者都继承于其他的父类呢？答案是可以的。</p>
+<p>既然要继承于其他的父类，它们这个父类肯定具备这两种形状共同的特点：有4个边。那么我们就定义一个四边形的类：<strong>Quadrangle</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//================== Quadrangle.h ==================</span><br><span class="line">@interface Quadrangle : NSObject &#123;</span><br><span class="line">    @protected double _width;</span><br><span class="line">    @protected double _height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setWidth:(double)width;</span><br><span class="line">- (void)setHeight:(double)height;</span><br><span class="line"></span><br><span class="line">- (double)width;</span><br><span class="line">- (double)height;</span><br><span class="line"></span><br><span class="line">- (double)getArea;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>接着，让 <strong>Rectangle</strong> 类和 <strong>Square</strong> 继承于它：</p>
+<p><strong>Rectangle</strong> 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//================== Rectangle.h ==================</span><br><span class="line">#import &quot;Quadrangle.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Rectangle : Quadrangle</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//================== Rectangle.m ==================</span><br><span class="line">@implementation Rectangle</span><br><span class="line"></span><br><span class="line">- (void)setWidth:(double)width &#123;</span><br><span class="line">    _width = width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setHeight:(double)height &#123;</span><br><span class="line">    _height = height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)width &#123;</span><br><span class="line">    return _width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)height &#123;</span><br><span class="line">    return _height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)getArea &#123;</span><br><span class="line">    return _width * _height;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p><strong>Square</strong> 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//================== Square.h ==================</span><br><span class="line">@interface Square : Quadrangle &#123;</span><br><span class="line">    @protected double _sideLength;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)setSideLength:(double)sideLength;</span><br><span class="line"></span><br><span class="line">-(double)sideLength;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//================== Square.m ==================</span><br><span class="line">@implementation Square</span><br><span class="line"></span><br><span class="line">-(void)setSideLength:(double)sideLength &#123;    </span><br><span class="line">    _sideLength = sideLength;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(double)sideLength &#123;</span><br><span class="line">    return _sideLength;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setWidth:(double)width &#123;</span><br><span class="line">    _sideLength = width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setHeight:(double)height &#123;</span><br><span class="line">    _sideLength = height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)width &#123;</span><br><span class="line">    return _sideLength;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)height &#123;</span><br><span class="line">    return _sideLength;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (double)getArea &#123;</span><br><span class="line">    return _sideLength * _sideLength;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，<strong>Rectangle</strong> 和 <strong>Square</strong> 类都以自己的方式实现了父类 <strong>Quadrangle</strong> 的公共方法。而且由于 <strong>Square</strong> 的特殊性，它也声明了自己独有的成员变量 _sideLength 以及其对应的公共方法。</p>
+<blockquote>
+<p>注意，这里 <strong>Rectange</strong> 和 <strong>Square</strong> 并不是重写了其父类的公共方法，而是实现了其抽象方法。</p>
+</blockquote>
+<p>下面来看一下这两个设计的 UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h4 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h4><p>未实践里氏替换原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190217205237.jpg"></p>
+<p>实践了里氏替换原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190217205254.jpg"></p>
+<h2 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h2><p>里氏替换原则是对继承关系的一种检验：检验是否真正符合继承关系，以避免继承的滥用。因此，在使用继承之前，需要反复思考和确认该继承关系是否正确，或者当前的继承体系是否还可以支持后续的需求变更，如果无法支持，则需要及时重构，采用更好的方式来设计程序。</p>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>关于这几个设计原则还有最后一点需要强调的是：设计原则是设计模式的基石，但是很难在实际开发中的某个设计中全部都满足这些设计原则。因此我们需要抓住具体设计场景的特殊性，有选择地遵循最合适的设计原则。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

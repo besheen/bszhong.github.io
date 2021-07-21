@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之创建型篇（一）：简单工厂</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+简单工厂模式：专门定义一个类（工厂类）来负责创建其他类的实例。可以根据创建方法的参数来返回不同类的实例，被创建的实例通常都具有共同的父类。
+
+简单工厂模式又称为静态工厂方法（Static Factory Method）模式，它属于类创建型模式。
+适用场景如果我们希望将一些为数不多的类似的对象的">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之创建型篇（一）：简单工厂"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之创建型篇（一）：简单工厂
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">适用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E4%B8%8E%E7%B1%BB%E5%9B%BE"><span class="toc-text">成员与类图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS-SDK-%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-text">iOS SDK 中的应用</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>简单工厂模式：专门定义一个类（工厂类）来负责创建其他类的实例。可以根据创建方法的参数来返回不同类的实例，被创建的实例通常都具有共同的父类。</p>
+</blockquote>
+<p>简单工厂模式又称为静态工厂方法（Static Factory Method）模式，它属于类创建型模式。</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><p>如果我们希望将一些为数不多的类似的对象的创建和他们的创建细节分离开，也不需要知道对象的具体类型，可以使用简单工厂模式。</p>
+<p>举个形象点的例子：在前端开发中，常常会使用外观各式各样的按钮，比如有的按钮有圆角，有的按钮有阴影，有的按钮有边框，有的按钮无边框等等。但是因为同一种样式的按钮可以出现在项目的很多地方，所以如果在每个地方都把创建按钮的逻辑写一遍的话显然是会造成代码的重复（而且由于业务的原因有的按钮的创建逻辑可能比较复杂，代码量大）。</p>
+<p>那么为了避免重复代码的产生，我们可以将这些创建按钮的逻辑都放在一个 “工厂” 里面，让这个工厂来根据你的需求（传入的参数）来创建对应的按钮并返回给你。这样一来，同样类型的按钮在多个地方使用的时候，就可以只给这个工厂传入其对应的参数并拿到返回的按钮即可。</p>
+<p>下面来看一下简单工厂模式的成员和类图。</p>
+<h2 id="成员与类图"><a href="#成员与类图" class="headerlink" title="成员与类图"></a>成员与类图</h2><p>简单工厂模式的结构比较简单，一共只有三个成员：</p>
+<ul>
+<li>工厂（Factory）：负责实现创建所有产品实例的逻辑；</li>
+<li>接口（Product）：负责声明工厂所创建的所有产品对象所实现的接口类；</li>
+<li>具体产品（Concrete Product）：工厂所创建的所有产品对象类，它以自己的方式来实现其共同父类声明的接口。</li>
+</ul>
+<p>下面通过类图来看一下各个成员之间的关系：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190219201218.jpg"></p>
+<blockquote>
+<p>从类图中可以看出，工厂类提供一个静态方法：通过传入的类型参数来制造其对应的产品。</p>
+<p>简单工厂就做了一件事，把 <strong>Client 要做的创建工作，挪到了另一个类里</strong>。</p>
+</blockquote>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p>举一个店铺售卖不同品牌手机的例子：店铺，即客户端类，向手机工厂购进手机售卖。</p>
+<p>该场景可以使用简单工厂的角色来设计：</p>
+<ul>
+<li>产品类接口（也可以用抽象类）：<em><strong>Phone</strong></em>，是所有具体产品类实现的接口，定义了一个方法： <code>packaging()</code>，表示手机装箱并送到店铺；</li>
+<li>具体产品：不同品牌的手机，iPhone手机类（<strong>IPhone</strong>），小米手机类（<strong>MIPhone</strong>），华为手机类（<strong>HWPhone</strong>）；</li>
+<li>工厂：<strong>PhoneFactory</strong> 根据不同的参数来创建不同的手机；</li>
+<li>客户端类：店铺类 <strong>Store</strong> 负责售卖手机。</li>
+</ul>
+<p>下面来看一下各个类的具体实现：</p>
+<p>产品接口类 <em><strong>Phone</strong></em>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Phone</span>: <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">packaging</span>()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体产品类 <strong>IPhone</strong>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IPhone</span>: <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">packaging</span>()</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;iPhone has been packaged.&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;iPhone&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体产品类 <strong>MIPhone</strong>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MIPhone</span>: <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">packaging</span>()</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;MIPhone has been packaged.&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Mi Phone&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体产品类 <strong>HWPhone</strong>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HWPhone</span>: <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">packaging</span>()</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;HUAWEI Phone has been packaged.&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;HW Phone&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是抽象产品类以及它的三个子类，下面看一下工厂类 <strong>PhoneFactory</strong>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PhoneFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">createPhone</span>(<span class="params">type</span>: <span class="type">Int</span>)</span> -&gt; <span class="type">Phone</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> type <span class="operator">==</span> <span class="number">0</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="type">IPhone</span>()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> type <span class="operator">==</span> <span class="number">1</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="type">HWPhone</span>()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="type">MIPhone</span>()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>工厂类向外部（客户端）提供了一个创造手机的接口 <code>createPhone:</code>，根据传入参数的不同可以返回不同的具体产品类。因此<strong>客户端只需要知道它所需要的产品所对应的参数即可获得对应的产品了</strong>。</p>
+</blockquote>
+<p>在本例中，我们声明了店铺类 <strong>Store</strong> 为客户端类：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Store</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> factory <span class="operator">=</span> <span class="type">PhoneFactory</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">sell</span>(<span class="params">phone</span>: <span class="type">Phone</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Store begins to sell phone: <span class="subst">\(phone)</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>客户端类声明了一个售卖手机的接口 <code>sell(phone: Phone):</code>，表示它可以售卖作为参数所传入的手机。</p>
+</blockquote>
+<p>最后我们用代码模拟一下这个实际场景：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> phoneStore <span class="operator">=</span> <span class="type">Store</span>()</span><br><span class="line"><span class="keyword">let</span> phone <span class="operator">=</span> phoneStore.factory.createPhone(type: <span class="number">0</span>)  <span class="comment">// get iPhone</span></span><br><span class="line">phoneStore.sell(phone: phone)  <span class="comment">// sell iPhone</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里我们需要注意的是：商店从工厂拿到手机不需要了解手机制作过程，只需要知道它要工厂做的是手机（只知道 <strong>Phone</strong> 类即可），和需要给工厂类传入它所需手机所对应的参数即可（这里的 iPhone 手机对应的参数就是 <strong>i</strong>）。</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li>客户端只需要给工厂类传入一个正确的（约定好的）参数，就可以获取你所需要的对象，而不需要知道其创建细节，一定程度上减少系统的耦合；</li>
+<li>客户端无须知道所创建的具体产品类的类名，只需要知道具体产品类所对应的参数即可，减少开发者的记忆成本；</li>
+<li><strong>Factory</strong> 代替了 <strong>Client</strong> 对具体 <strong>Product</strong> 的依赖，那么当需求变化的时候，我们不再需要改动调用方了。</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>如果业务上添加新产品的话，就需要修改工厂类原有的判断逻辑，每次变动都要在 <code>createPhone</code> 的方法内部新增一个 if-else 分之，这显然违背了<strong>开闭原则</strong>；</li>
+<li>在产品类型较多时，有可能造成工厂逻辑过于复杂，所以简单工厂模式比较适合产品种类比较少而且增多的概率很低的情况。</li>
+</ul>
+<p>为了解决这些问题，我们引入另一个模式：工厂模式。</p>
+<h2 id="iOS-SDK-中的应用"><a href="#iOS-SDK-中的应用" class="headerlink" title="iOS SDK 中的应用"></a>iOS SDK 中的应用</h2><p>Objective-C 中的类族就是简单工厂设计模式的一个应用。如果给 <strong>NSNumber</strong> 的工厂方法传入不同类型的数据，则会返回不同数据所对应的 <strong>NSNumber</strong> 的子类。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

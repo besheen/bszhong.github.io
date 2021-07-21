@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>数据结构与算法之二：链表</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="一、概述线性数据结构包括：动态数组、栈、队列和链表。其中动态数组、栈和队列底层都是依托静态数组，依靠 resize 解决固定容量的问题。
+链表（Linked List）是一种常见的基础数据结构，也是真正的动态数据结构。它是一种线性表，但是并不会按线性的顺序存储数据，而是在每一个节点（Node）里存储">
+  
+  
+  <meta property="og:title" content="数据结构与算法之二：链表"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        数据结构与算法之二：链表
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-12-06T11:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-12-06
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/数据结构与算法/">数据结构与算法</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/iOS/">iOS</a>·<a href="/tags/数据结构与算法/">数据结构与算法</a>·<a href="/tags/Swift/">Swift</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-text">二、代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%8A%82%E7%82%B9-Node"><span class="toc-text">1. 节点 Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%93%BE%E8%A1%A8"><span class="toc-text">2. 链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8F%92%E5%85%A5"><span class="toc-text">3. 插入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%81%8D%E5%8E%86%E3%80%81%E6%9F%A5%E8%AF%A2%E5%92%8C%E4%BF%AE%E6%94%B9"><span class="toc-text">4. 遍历、查询和修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%88%A0%E9%99%A4"><span class="toc-text">5. 删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="toc-text">三、时间复杂度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%93%BE%E8%A1%A8%E6%A0%88"><span class="toc-text">四、链表栈</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>线性数据结构包括：动态数组、栈、队列和链表。其中动态数组、栈和队列底层都是依托静态数组，依靠 resize 解决固定容量的问题。</p>
+<p>链表（Linked List）是一种常见的基础数据结构，也是真正的动态数据结构。它是一种线性表，但是并不会按线性的顺序存储数据，而是在每一个节点（Node）里存储下一个节点的指针（Pointer），不需要处理固定容量的问题。由于不必按顺序存储，链表在插入的时候可以达到 <code>O(1)</code> 的复杂度，比另一种线性表要快得多。但是链表丧失了随机访问的能力，在查找一个节点或者访问特定编号的节点则需要 <code>O(n)</code> 的时间，而顺序表相应的时间复杂度分别是 <code>O(logn)</code> 和 <code>O(1)</code>。</p>
+<h1 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h1><h3 id="1-节点-Node"><a href="#1-节点-Node" class="headerlink" title="1. 节点 Node"></a>1. 节点 Node</h3><p>首先我们先定义节点的数据结构：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">Element</span>: <span class="title">Equatable</span>&gt;: <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Element</span>?</span><br><span class="line">    <span class="keyword">var</span> next: <span class="type">Node</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">value</span>: <span class="type">Element</span>, <span class="params">next</span>: <span class="type">Node</span>?)</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.value <span class="operator">=</span> value</span><br><span class="line">        <span class="keyword">self</span>.next <span class="operator">=</span> next</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">convenience</span> <span class="function"><span class="keyword">init</span>(<span class="params">value</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(value: value, next: <span class="literal">nil</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> value <span class="operator">=</span> value <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;nil&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了让节点 Node 更加有用，更灵活，而不只存储单一类型的值，我们使用泛型来解决类型约束的问题。Node 中有两个成员变量：<code>value</code>（存储节点的值）和 <code>next</code>（指向下一节点）。</p>
+<p>接下来定义链表的数据结构。</p>
+<h3 id="2-链表"><a href="#2-链表" class="headerlink" title="2. 链表"></a>2. 链表</h3><p>一般情况下，我们会把链表的第一个节点看作是头节点，这也是很正常的想法，那么链表的结构就如下图：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190120005527.png"></p>
+<p>但为链表在任意位置添加元素的时候，在链表头和链表尾添加节点，逻辑上会有差别。因为在为链表添加节点的时候，需要知道待添加节点位置的前一个节点，对于头节点来说，它没有前面那个节点，所以在逻辑上会特殊一些，对应代码就需要多一个判断，这样代码就不够优雅和整洁。所以我们引入一个虚拟头节点（dummyHead），虚拟头节点定义为内容为空的节点，那么链表的结构就变成如下图：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190120005542.png"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span>&lt;<span class="title">Element</span>: <span class="title">Equatable</span>&gt;: <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 引入虚拟头节点</span></span><br><span class="line">    <span class="keyword">fileprivate</span> <span class="keyword">var</span> dumyHead: <span class="type">Node</span>&lt;<span class="type">Element</span>&gt;</span><br><span class="line">    <span class="comment">// 记录链表的元素</span></span><br><span class="line">    <span class="keyword">fileprivate</span> <span class="keyword">var</span> size: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>()</span> &#123;</span><br><span class="line">        <span class="comment">// 虚拟头节点不应该为空，而是一个元素为空，next也为空的节点</span></span><br><span class="line">        dumyHead <span class="operator">=</span> <span class="type">Node</span>()</span><br><span class="line">        size <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取链表中的元素个数</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> size</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 判断链表是否为空</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> size <span class="operator">==</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> result <span class="operator">=</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">var</span> currentNode <span class="operator">=</span> dumyHead.next</span><br><span class="line">        <span class="keyword">while</span> currentNode <span class="operator">!=</span> <span class="literal">nil</span> &#123;</span><br><span class="line">            result <span class="operator">+=</span> <span class="string">&quot;<span class="subst">\(currentNode<span class="operator">!</span>.value<span class="operator">!</span>)</span>-&gt;&quot;</span></span><br><span class="line">            currentNode <span class="operator">=</span> currentNode<span class="operator">!</span>.next</span><br><span class="line">        &#125;</span><br><span class="line">        result.append(<span class="string">&quot;nill&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-插入"><a href="#3-插入" class="headerlink" title="3. 插入"></a>3. 插入</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在链表的任意位置添加新的元素e</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">add</span>(<span class="params">index</span>: <span class="type">Int</span>, <span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> index <span class="operator">&gt;=</span> <span class="number">0</span> <span class="operator">&amp;&amp;</span> index <span class="operator">&lt;=</span> size <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">fatalError</span>(<span class="string">&quot;Add failed. Illegal index.&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 待插入元素位置的前一个节点</span></span><br><span class="line">        <span class="keyword">var</span> preNode <span class="operator">=</span> dumyHead</span><br><span class="line">        <span class="keyword">for</span> <span class="keyword">_</span> <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span>index &#123;</span><br><span class="line">            preNode <span class="operator">=</span> preNode.next<span class="operator">!</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> tempNode <span class="operator">=</span> <span class="type">Node</span>(value: e)</span><br><span class="line">        tempNode.next <span class="operator">=</span> preNode.next</span><br><span class="line">        preNode.next <span class="operator">=</span> tempNode</span><br><span class="line">        </span><br><span class="line">        size <span class="operator">+=</span> <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 在链表头添加新的元素e</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">addFirst</span>(<span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        add(index: <span class="number">0</span>, e: e)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 在链表末尾添加新的元素e</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">addLast</span>(<span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        add(index: size, e: e)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于上面插入操作需要注意两点：</p>
+<ul>
+<li><p>节点赋值顺序很重要</p>
+</li>
+<li><p>赋值代码可以如下精简：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preNode.next <span class="operator">=</span> <span class="type">Node</span>(value: e, next: preNode.next)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-遍历、查询和修改"><a href="#4-遍历、查询和修改" class="headerlink" title="4. 遍历、查询和修改"></a>4. 遍历、查询和修改</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 获得链表的第index个位置的元素</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在链表中不是一个常用的操作</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">get</span>(<span class="params">index</span>: <span class="type">Int</span>)</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> index <span class="operator">&gt;=</span> <span class="number">0</span> <span class="operator">&amp;&amp;</span> index <span class="operator">&lt;</span> size <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">fatalError</span>(<span class="string">&quot;Get failed. Illegal index.&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> currentNode <span class="operator">=</span> dumyHead.next</span><br><span class="line">        <span class="keyword">for</span> <span class="keyword">_</span> <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span>index &#123;</span><br><span class="line">            currentNode <span class="operator">=</span> currentNode<span class="operator">?</span>.next</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> currentNode<span class="operator">!</span>.value<span class="operator">!</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取链表的第一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getFirst</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">get</span>(index: <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取链表的最后一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getLast</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">get</span>(index: size <span class="operator">-</span> <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 查找链表中是否有元素e</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">contains</span>(<span class="params">e</span>: <span class="type">Element</span>)</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> currentNode <span class="operator">=</span> dumyHead.next</span><br><span class="line">        <span class="keyword">while</span> currentNode <span class="operator">!=</span> <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> currentNode<span class="operator">!</span>.value <span class="operator">==</span> e &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            currentNode <span class="operator">=</span> currentNode<span class="operator">!</span>.next</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 修改链表的第index个位置的元素为e</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在链表中不是一个常用的操作</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">set</span>(<span class="params">at</span> <span class="params">index</span>: <span class="type">Int</span>, <span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> index <span class="operator">&gt;=</span> <span class="number">0</span> <span class="operator">&amp;&amp;</span> index <span class="operator">&lt;</span> size <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">fatalError</span>(<span class="string">&quot;Set failed. Illegal index.&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> currentNode <span class="operator">=</span> dumyHead.next</span><br><span class="line">        <span class="keyword">for</span> <span class="keyword">_</span> <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span>index &#123;</span><br><span class="line">            currentNode <span class="operator">=</span> currentNode<span class="operator">?</span>.next</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        currentNode<span class="operator">?</span>.value <span class="operator">=</span> e</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-删除"><a href="#5-删除" class="headerlink" title="5. 删除"></a>5. 删除</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 在链表中不是一个常用的操作</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从链表中删除index位置的元素，返回删除的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">remove</span>(<span class="params">at</span> <span class="params">index</span>: <span class="type">Int</span>)</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> index <span class="operator">&gt;=</span> <span class="number">0</span> <span class="operator">&amp;&amp;</span> index <span class="operator">&lt;=</span> size <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">fatalError</span>(<span class="string">&quot;Remove failed. Index is illegal.&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> preNode <span class="operator">=</span> dumyHead</span><br><span class="line">        <span class="keyword">for</span> <span class="keyword">_</span> <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span>index &#123;</span><br><span class="line">            preNode <span class="operator">=</span> preNode.next<span class="operator">!</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> removedNode <span class="operator">=</span> preNode.next<span class="operator">!</span></span><br><span class="line">        preNode.next <span class="operator">=</span> removedNode.next</span><br><span class="line">        removedNode.next <span class="operator">=</span> <span class="literal">nil</span></span><br><span class="line">        size <span class="operator">-=</span> <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> removedNode.value<span class="operator">!</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 从链表中删除第一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">removeFirst</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> remove(at: <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 从链表中删除最后一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">removeLast</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> remove(at: size <span class="operator">-</span> <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、时间复杂度"><a href="#三、时间复杂度" class="headerlink" title="三、时间复杂度"></a>三、时间复杂度</h1><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>增</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>删</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>改</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>查</td>
+<td>O(n)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>特别的：</p>
+<ul>
+<li>如果只对链表头进行增、删操作，时间复杂度为：O(1)</li>
+<li>对于链表建议不进行修改、查询操作</li>
+<li>可以对链表查询表头的元素，时间复杂度为：O(1)</li>
+</ul>
+</blockquote>
+<h1 id="四、链表栈"><a href="#四、链表栈" class="headerlink" title="四、链表栈"></a>四、链表栈</h1><p>首先我们来定义栈的接口类：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Element</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">push</span>(<span class="params">e</span>: <span class="type">Element</span>)</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">pop</span>()</span> -&gt; <span class="type">Element</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">peek</span>()</span> -&gt; <span class="type">Element</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们使用上面定义的链表 <strong>LinkedList</strong> 来实现链表栈：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinkedListStack</span>&lt;<span class="title">Element</span>: <span class="title">Equatable</span>&gt;: <span class="title">Stack</span>, <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">fileprivate</span> <span class="keyword">var</span> list: <span class="type">LinkedList</span>&lt;<span class="type">Element</span>&gt;!</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>()</span> &#123;</span><br><span class="line">        list <span class="operator">=</span> <span class="type">LinkedList</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> list.size</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> list.isEmpty()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">push</span>(<span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        list.addFirst(e: e)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">pop</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> list.removeFirst()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">peek</span>()</span> -&gt; <span class="type">Element</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> list.getFirst()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> result <span class="operator">=</span> <span class="string">&quot;Stack: top: &quot;</span></span><br><span class="line">        result.append(<span class="string">&quot;<span class="subst">\(list<span class="operator">!</span>)</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试一下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> stack <span class="operator">=</span> <span class="type">LinkedListStack</span>&lt;<span class="type">Int</span>&gt;()</span><br><span class="line"><span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span><span class="number">5</span> &#123;</span><br><span class="line">    stack.push(e: index)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;<span class="subst">\(stack)</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">stack.pop()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;<span class="subst">\(stack)</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>输出为：</p>
+<p><strong>Stack: top: 0-&gt;nill</strong></p>
+<p><strong>Stack: top: 1-&gt;0-&gt;nill</strong></p>
+<p><strong>Stack: top: 2-&gt;1-&gt;0-&gt;nill</strong></p>
+<p><strong>Stack: top: 3-&gt;2-&gt;1-&gt;0-&gt;nill</strong></p>
+<p><strong>Stack: top: 4-&gt;3-&gt;2-&gt;1-&gt;0-&gt;nill</strong></p>
+<p><strong>Stack: top: 3-&gt;2-&gt;1-&gt;0-&gt;nill</strong></p>
+</blockquote>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

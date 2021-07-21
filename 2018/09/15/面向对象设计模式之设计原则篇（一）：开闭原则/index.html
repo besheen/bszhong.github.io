@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（一）：开闭原则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="前言在学习设计模式之前，学习面向对象设计（OOD：Object Oriented Design）的设计原则是很有必要的，为后面设计模式的学习打下基础。
+本篇分享的就是笔者近阶段学习和总结的面向对象设计的六大设计原则：
+
+
+
+缩写
+英文名称
+中文名称
+
+
+
+SRP
+Single Responsibil">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（一）：开闭原则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（一）：开闭原则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%94%B1%E6%9D%A5"><span class="toc-text">问题由来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-text">代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E7%82%B9"><span class="toc-text">需求点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学习设计模式之前，学习面向对象设计（OOD：Object Oriented Design）的设计原则是很有必要的，为后面设计模式的学习打下基础。</p>
+<p>本篇分享的就是笔者近阶段学习和总结的面向对象设计的六大设计原则：</p>
+<table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>英文名称</th>
+<th>中文名称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SRP</td>
+<td>Single Responsibility Principle</td>
+<td>单一职责原则</td>
+</tr>
+<tr>
+<td>OCP</td>
+<td>Open Close Principle</td>
+<td>开闭原则</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>Liskov Substitution Principle</td>
+<td>里氏替换原则</td>
+</tr>
+<tr>
+<td>LoD</td>
+<td>Law of Demeter （ Least Knowledge Principle）</td>
+<td>迪米特法则（最少知道原则）</td>
+</tr>
+<tr>
+<td>ISP</td>
+<td>Interface Segregation Principle</td>
+<td>接口分离原则</td>
+</tr>
+<tr>
+<td>DIP</td>
+<td>Dependency Inversion Principle</td>
+<td>依赖倒置原则</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意：通常所说的 <strong>SOLID</strong>（上方表格缩写的首字母，从上到下）设计原则没有包含本篇介绍的迪米特法则，而只有其他五项。另外，本篇不包含<strong>合成/聚合复用原则（CARP）</strong>，因为笔者认为该原则没有其他六个原则典型，而且在实践中也不容易违背。有兴趣的同学可以自行查资料学习。</p>
+</blockquote>
+<p>在本系列里笔者将分别讲解这些设计原则，讲解的方式是将概念、问题由来、解决方案、代码讲解及其对应的 UML 类图结合起来讲解。</p>
+<p>代码使用的是笔者最熟悉的 Objective-C 语言。虽然是一个比较小众的语言，但是因为有 UML 类图的帮助，而且主流的面向对象语言关于类，接口（Objective-C 里面是协议）的使用在形式上类似，所以笔者相信语言的小众不会对知识的理解产生太大的阻力。</p>
+<p>另外，在每个设计原则的讲解里，笔者会首先描述一个应用场景（需求点），接着用两种设计的代码来进行对比讲解：先提供相对不好的设计的代码，再提供相对好的设计的代码。而且两种代码都会附上标准的 UML 类图来进行更形象地对比，帮助大家来理解。同时也可以帮助不了解 UML 类图的读者先简单熟悉一下 UML 类图的语法。</p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
+<p>一个软件实体如类、模块和函数应该对扩展开发，对修改关闭。</p>
+</blockquote>
+<p>定义的解读：</p>
+<ul>
+<li>用抽象构件框架，用实现扩展细节；</li>
+<li>不以改动原有类的方式来实现新需求，而是应该以实现事先抽象出来的接口（或具体类继承抽象类）的方式来实现。</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>实现开闭原则的优点在于可以在不改动原有代码的前提下给程序扩展功能；</li>
+<li>增加了程序的可扩展性，同时也降低了程序的维护成本。</li>
+</ul>
+<h1 id="问题由来"><a href="#问题由来" class="headerlink" title="问题由来"></a>问题由来</h1><p>在软件的生命周期内，因为变化、升级和维护等原因需要对软件原有代码进行修改时，可能会给旧代码引入错误，也可能会使我们不得不对整个功能进行重构，并且需要原有代码经过重新测试。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p><strong>当软件需要变化时，尽量通过扩展软件实体的行为来实现变化，而不是通过修改已有的代码来实现变化。</strong></p>
+<p>实际上，变化或者可能的变化来的越早，抽象就越容易，相对的，代码的维护也就越容易。而当项目接近于完成而来的需求变化，则会使抽象变得很困难，这个困难，并不是抽象本身的困难，抽象本身并没有困难，困难在于系统的架构已经完成，修改牵扯的方面太多而使得抽象的工作变得困难。</p>
+<p>开闭原则是面向对象设计中最基础的设计原则，它指导我们如何建立稳定灵活的系统。开闭原则可能是设计模式六项原则中定义最模糊的一个了，它只告诉我们对扩展开放，对修改关闭，可是到底如何才能做到对扩展开放，对修改关闭，并没有明确的告诉我们。以前，如果有人告诉我 “你进行设计的时候一定要遵守开闭原则”，我会觉的他什么都没说，但貌似又什么都说了。因为开闭原则真的太虚了。</p>
+<p>开闭原则无非就是想表达这样一层意思：<strong>用抽象构建框架，用实现扩展细节。</strong>因为抽象灵活性好，适应性广，只要抽象的合理，可以基本保持软件架构的稳定。而软件中易变的细节，我们用从抽象派生的实现类来进行扩展，当软件需要发生变化时，我们只需要根据需求重新派生一个实现类来扩展就可以了。当然前提是我们的抽象要合理，要对需求的变更有前瞻性和预见性才行。</p>
+<h1 id="代码讲解"><a href="#代码讲解" class="headerlink" title="代码讲解"></a>代码讲解</h1><p>下面通过一个简单的关于在线课程的例子讲解一下开闭原则的实践。</p>
+<h3 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h3><p>设计一个在线课程类：</p>
+<p>由于教学资源有限，开始的时候只有类似于博客的，通过文字讲解的课程。但是随着教学资源的增多，后来增加了视频课程，音频课程以及直播课程。</p>
+<p>先来看一下不好的设计：</p>
+<h3 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h3><p>最开始的文字课程类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Course</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseTitle;         <span class="comment">// 课程名称</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseIntroduction;  <span class="comment">// 课程介绍</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *teacherName;         <span class="comment">// 讲师姓名</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *content;             <span class="comment">// 课程内容</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Course</strong> 类声明了最初的在线课程所需要包含的数据：</p>
+<ul>
+<li>课程名称</li>
+<li>课程介绍</li>
+<li>讲师姓名</li>
+<li>文字内容</li>
+</ul>
+<p>接着按照上面所说的需求变更：增加了视频、音频、直播课程：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Course</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseTitle;         <span class="comment">// 课程名称</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseIntroduction;  <span class="comment">// 课程介绍</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *teacherName;         <span class="comment">// 讲师姓名</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *content;             <span class="comment">// 文字内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新需求：视频课程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *videoUrl;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新需求：音频课程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *audioUrl;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新需求：直播课程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *liveUrl;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>三种新增的课程都在原 <strong>Course</strong> 类中添加了对应的 URL。也就是每次添加一个新的类型的课程，都在原有 <strong>Course</strong> 类里面修改：新增这种课程需要的数据。</p>
+<p>这就导致：我们从 <strong>Course</strong> 类实例化的视频课程对象会包含并不属于自己的数据：<code>audioUrl</code> 和 <code>liveUrl</code>，这样就造成了冗余，视频课程对象并不是纯粹的视频课程对象，它包含了音频地址、直播地址等属性。</p>
+<p>很显然，这个设计不是一个好的设计，因为（对应上面两段叙述）：</p>
+<ol>
+<li>随着需求的增加，需要反复修改之前创建的类；</li>
+<li>给新增的类造成了不必要的冗余。</li>
+</ol>
+<p>之所以会造成上述两个缺陷，是因为该设计没有遵循对修改关闭，对扩展开放的开闭原则，而是反其道而行之：开放修改，而且不给扩展提供便利。</p>
+<p>那么怎么做可以遵循开闭原则呢？下面看一下遵循开闭原则的较好的设计：</p>
+<h3 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h3><p>首先在 <strong>Course</strong> 类中仅仅保留所有课程都含有的数据：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Course</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseTitle;         <span class="comment">// 课程名称</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *courseIntroduction;  <span class="comment">// 课程介绍</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *teacherName;         <span class="comment">// 讲师姓名</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *content;             <span class="comment">// 课程内容</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>接着，针对文字课程、视频课程、音频课程，直播课程这三种新型的课程采用继承 <strong>Course</strong> 类的方式。而且继承后，添加自己独有的数据：</p>
+<p>文字课程类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TextCourse</span> : <span class="title">Course</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *content;             <span class="comment">// 文字内容</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>视频课程类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VideoCourse</span> : <span class="title">Course</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *videoUrl;            <span class="comment">// 视频地址</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>音频课程类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AudioCourse</span> : <span class="title">Course</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *audioUrl;            <span class="comment">// 音频地址</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>直播课程类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">LiveCourse</span> : <span class="title">Course</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *liveUrl;             <span class="comment">// 直播地址</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>这样一来，上面的两个问题都得到了解决：</p>
+<ol>
+<li>随着课程类型的增加，不需要反复修改最初的父类 <strong>Course</strong>，只需要新建一个继承于它的子类并在子类中添加仅属于该子类的数据（或行为）即可；</li>
+<li>因为各种课程独有的数据（或行为）都被分散到了不同的课程子类里，所以每个子类的数据（或行为）没有任何冗余。</li>
+</ol>
+<p>而且对于第二点：或许今后的视频课程可以有高清地址，视频加速功能。而这些功能只需要在 <strong>VideoCourse</strong> 类里添加即可，因为它们都是视频课程所独有的。同样地，直播课程后面还可以支持在线问答功能，也可以仅加在 <strong>LiveCourse</strong> 里面。</p>
+<p>我们可以看到，正是由于最初程序设计合理，所以对后面需求的增加才会处理得很好。</p>
+<p>下面来看一下这两个设计的 UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h3 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h3><p>未实践开闭原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190214224619.jpg"></p>
+<p>实践了开闭原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190214224651.jpg"></p>
+<blockquote>
+<p>在实践了开闭原则的 UML 类图中，四个课程类继承了 <strong>Course</strong> 类并增加了自己独有的属性。（在 UML 类图中，实践空心三角箭头代表继承关系，由子类指向其父类）</p>
+</blockquote>
+<h1 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h1><p>为了更好地实践开闭原则，在设计之初就要清楚在该场景里哪些数据（或行为）是一定不变（或很难再改变）的，哪些是很容易变动的。将后者抽象成接口或抽象方法，以便于在将来通过创造具体的实现应对不同的需求。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

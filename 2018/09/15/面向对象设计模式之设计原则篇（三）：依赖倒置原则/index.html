@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（三）：依赖倒置原则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+
+Depend upon Abstractions. Do not depend upon concretions.
+依赖抽象，而不是依赖实现
+
+Abstractions should not depend upon details. Details should depend upon ab">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（三）：依赖倒置原则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（三）：依赖倒置原则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%94%B1%E6%9D%A5"><span class="toc-text">问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-text">代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E7%82%B9"><span class="toc-text">需求点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<ul>
+<li><p>Depend upon Abstractions. Do not depend upon concretions.</p>
+<p>依赖抽象，而不是依赖实现</p>
+</li>
+<li><p>Abstractions should not depend upon details. Details should depend upon abstractions</p>
+<p>抽象不应该依赖细节；细节应该依赖抽象</p>
+</li>
+<li><p>High-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
+<p>高层模块不能依赖底层模块，二者都应该依赖抽象</p>
+</li>
+</ul>
+</blockquote>
+<p>定义解读：</p>
+<ul>
+<li>针对接口编程，而不是针对实现编程；</li>
+<li>尽量不要从具体的类派生，而是以继承抽象类或实现接口来实现；</li>
+<li>关于高层模块与低层模块的划分可以按照决策能力的高低进行划分。业务层自然就处于上层模块，逻辑层和数据层自然就归类为底层。</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>通过抽象来搭建框架，建立类和类的关联，以减少类间的耦合性；</li>
+<li>以抽象搭建的系统要比以具体实现搭建的系统更加稳定，扩展性更高，同时也便于维护。</li>
+</ul>
+<h2 id="问题由来"><a href="#问题由来" class="headerlink" title="问题由来"></a>问题由来</h2><p>类 A 直接依赖类 B，假如要将类 A 改为依赖类 C，则必须通过修改类 A 的代码来达成。这种场景下，类 A 一般是高层模块，负责复杂的业务逻辑；类 B 和类 C 是低层模块，负责基本的原子操作；假如修改类 A，会给程序带来不必要的风险。</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190307234553.png"></p>
+<blockquote>
+<p>传统的过程式设计倾向于使高层次的模块依赖于低层次的模块，抽象层依赖于具体的层次。</p>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>将类 A 修改为依赖接口 P，类 B 和类 C 各自实现接口 P，类 A 通过接口 P 间接与类 B 或者类 C 发生联系，则会大大降低修改类 A 的几率。</p>
+<p>依赖倒置原则基于这样一个事实：相对于细节的多变性，抽象的东西要稳定的多。以抽象为基础搭建起来的架构比以细节为基础搭建起来的架构要稳定的多。在 Objective-C 中，抽象指的是接口或者抽象类，细节就是具体的实现类，使用接口或者抽象类的目的是制定好规范和契约，而不去涉及任何具体的操作，把展现细节的任务交给他们的实现类去完成。</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190307235704.png"></p>
+<blockquote>
+<p> 采用依赖倒置原则可以减少类间的耦合性，提高系统的稳定性，提高代码的可读性和可维护性。</p>
+</blockquote>
+<h2 id="代码讲解"><a href="#代码讲解" class="headerlink" title="代码讲解"></a>代码讲解</h2><p>下面通过一个模拟项目开发的例子来讲解依赖倒置原则。</p>
+<h3 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h3><p>实现下面这样的需求：</p>
+<p>用代码模拟一个实际项目开发的场景：前端和后端开发人员开发同一个项目。</p>
+<h3 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h3><p>首先生成两个类，分别对应前端和后端开发者：</p>
+<p>前端开发者：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== FrondEndDeveloper.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FrondEndDeveloper</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeJavaScriptCode;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== FrondEndDeveloper.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FrondEndDeveloper</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeJavaScriptCode &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Write JavaScript code&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>后端开发者：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== BackEndDeveloper.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">BackEndDeveloper</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeJavaCode;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== BackEndDeveloper.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">BackEndDeveloper</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeJavaCode &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Write Java code&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>这两个开发者分别对外提供了自己开发的方法：<code>writeJavaScriptCode</code> 和 <code>writeJavaCode</code>。</p>
+<p>接着创建一个 <strong>Project</strong> 类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== Project.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Project</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//构造方法，传入开发者的数组</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithDevelopers:(<span class="built_in">NSArray</span> *)developers;</span><br><span class="line"></span><br><span class="line"><span class="comment">//开始开发</span></span><br><span class="line">- (<span class="keyword">void</span>)startDeveloping;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== Project.m ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Project.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;FrondEndDeveloper.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;BackEndDeveloper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Project</span> </span>&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *_developers;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithDevelopers:(<span class="built_in">NSArray</span> *)developers &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> = [<span class="keyword">super</span> init]) &#123;</span><br><span class="line">        _developers = developers;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startDeveloping &#123;</span><br><span class="line">    [_developers enumerateObjectsUsingBlock:^(<span class="keyword">id</span>  _Nonnull developer, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> ([developer isKindOfClass:[FrondEndDeveloper <span class="keyword">class</span>]]) &#123;</span><br><span class="line">            [developer writeJavaScriptCode];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([developer isKindOfClass:[BackEndDeveloper <span class="keyword">class</span>]]) &#123;</span><br><span class="line">            [developer writeJavaCode];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//no such developer</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <strong>Project</strong> 类中，我们首先通过一个构造器方法，将开发者的数组传入 <strong>Project</strong> 的实例对象。然后在开始开发的方法 <code>startDeveloping</code> 里面，遍历数组并判断元素类型的方式让不同类型的开发者调用和自己对应的函数。</p>
+<p>思考一下，这样的设计有什么问题？</p>
+<p><strong>问题一：</strong></p>
+<p>假如后台的开发语言改成了 GO 语言，那么上述代码需要改动两个地方：</p>
+<ul>
+<li><strong>BackEndDeveloper</strong> 类需要向外提供一个 <code>writeGolangCode</code> 方法；</li>
+<li><strong>Project</strong> 类的 <code>startDeveloping</code> 方法里面需要将 <strong>BackEndDeveloper</strong> 类的 <code>writeJavaCode</code> 改成 <code>writeGolangCode</code>。</li>
+</ul>
+<p><strong>问题二：</strong></p>
+<p>假如后期老板要求做移动端的 APP（需要 iOS 和安卓的开发者），那么上述代码仍然需要改动两个地方：</p>
+<ul>
+<li>还需要给 <strong>Project</strong> 类的构造器方法里面传入 <strong>IOSDeveloper</strong> 和 <strong>AndroidDeveloper</strong> 两个类，而且按照现有的设计，还要分别向外部提供 <code>writeSwiftCode</code> 和 <code>writeKotlinCode</code> 方法；</li>
+<li><strong>Project</strong> 类的 <code>startDeveloping</code> 方法里面需要再多两个 else if 判断，专门判断 <strong>IOSDeveloper</strong> 和 <strong>AndroidDeveloper</strong> 这两个类。</li>
+</ul>
+<p>很显然，在这两种假设的场景下，<strong>高层模块（Project）都依赖了低层模块（BackEndDeveloper）的改动，因此上述设计不符合依赖倒置原则</strong>。</p>
+<p>那么该如何设计才可以符合依赖倒置原则呢？</p>
+<p>答案是：<strong>将开发者写代码的方法抽象出来，让 Project 类不再依赖所有低层的开发者类的具体实现，而是依赖抽象。而且从下至上，所有低层开发者类也都依赖这个抽象，通过实现这个抽象来做自己的任务</strong>。</p>
+<p>这个抽象可以用接口，也可以用抽象类的方式来做，在这里笔者用接口的方式进行讲解：</p>
+<h3 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h3><p>首先，创建一个接口，接口里面有一个写代码的方法 <code>writeCode</code>：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== DeveloperProtocol.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">DeveloperProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeCode;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>然后让前端程序员和后端程序员类实现这个接口（遵循这个协议）并按照自己的方式实现。</p>
+<p>前端程序员类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== FrondEndDeveloper.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FrondEndDeveloper</span> : <span class="title">NSObject</span>&lt;<span class="title">DeveloperProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== FrondEndDeveloper.m ==================</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FrondEndDeveloper</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeCode &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Write JavaScript code&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>后端程序员类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== BackEndDeveloper.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">BackEndDeveloper</span> : <span class="title">NSObject</span>&lt;<span class="title">DeveloperProtocol</span>&gt;</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== BackEndDeveloper.m ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">BackEndDeveloper</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)writeCode &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Write Java code&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>最后我们看一下新设计后的 <strong>Project</strong> 类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== Project.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;DeveloperProtocol.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Project</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//只需传入遵循DeveloperProtocol的对象数组即可</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithDevelopers:(<span class="built_in">NSArray</span> &lt;<span class="keyword">id</span> &lt;DeveloperProtocol&gt;&gt;*)developers;</span><br><span class="line"></span><br><span class="line"><span class="comment">//开始开发</span></span><br><span class="line">- (<span class="keyword">void</span>)startDeveloping;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//================== Project.m ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;FrondEndDeveloper.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;BackEndDeveloper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Project</span> </span>&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> &lt;<span class="keyword">id</span> &lt;DeveloperProtocol&gt;&gt;* _developers;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithDevelopers:(<span class="built_in">NSArray</span> &lt;<span class="keyword">id</span> &lt;DeveloperProtocol&gt;&gt;*)developers &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> = [<span class="keyword">super</span> init]) &#123;</span><br><span class="line">        _developers = developers;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startDeveloping &#123;</span><br><span class="line">    <span class="comment">//每次循环，直接向对象发送writeCode方法即可，不需要判断</span></span><br><span class="line">    [_developers enumerateObjectsUsingBlock:^(<span class="keyword">id</span>&lt;DeveloperProtocol&gt;  _Nonnull developer, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">        [developer writeCode];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>新的 <strong>Project</strong> 的构造方法只需传入遵循 <em><strong>DeveloperProtocol</strong></em> 协议的对象构成的数组即可。这样也比较符合现实中的需求：只需要会写代码就可以加入到项目中。</p>
+<p>而新的 <code>startDeveloping</code> 方法里，每次循环，直接向当前对象发送 <code>writeCode</code> 方法即可，不需要对程序员的类型做判断。因为这个对象一定是遵循 <em><strong>DeveloperProtocol</strong></em> 接口的，而遵循该接口的对象一定会实现 <code>writeCode</code> 方法（就算不实现也不会引起重大错误）。</p>
+<p>现在新的设计接受完了，我们通过上面假设的两个情况来和之前的设计做个对比：</p>
+<p><strong>假设1：后台的开发语言改成了 GO 语言</strong></p>
+<p>在这种情况下，只需更改 <strong>BackEndDeveloper</strong> 类里面对于 <em><strong>DeveloperProtocol</strong></em>  接口的 <code>writeCode</code> 方法的实现即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//================== BackEndDeveloper.m ==================</span><br><span class="line">@implementation BackEndDeveloper</span><br><span class="line"></span><br><span class="line">- (void)writeCode &#123;</span><br><span class="line">    //Old：</span><br><span class="line">    //NSLog(@&quot;Write Java code&quot;);</span><br><span class="line">    </span><br><span class="line">    //New:</span><br><span class="line">    NSLog(@&quot;Write Golang code&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>而在 <strong>Project</strong> 里面不需要修改任何代码，因为 <strong>Project</strong> 类只依赖了接口方法 <code>writeCode</code>，没有依赖其具体的实现。</p>
+<p>我们接着看一下第二个假设：</p>
+<p><strong>假设2：后期老板要求做移动端的 APP（需要iOS和安卓的开发者）</strong></p>
+<p>在这个新场景下，我们只需要将新创建的两个开发者类：<strong>IOSDeveloper</strong> 和 <strong>AndroidDeveloper</strong> 分别实现<em><strong>DeveloperProtocol</strong></em> 接口的 <code>writeCode</code> 方法即可。</p>
+<p>同样，<strong>Project</strong> 的接口和实现代码都不用修改：客户端只需要在 <strong>Project</strong> 的构建方法的数组参数里面添加这两个新类的实例即可，不需要在 <code>startDeveloping</code> 方法里面添加类型判断，原因同上。</p>
+<p>我们可以看到，新设计很好地在高层类（<strong>Project</strong>）与低层类（各种 <strong>developer</strong> 类）中间加了一层抽象，解除了二者在旧设计中的耦合，使得在低层类中的改动没有影响到高层类。</p>
+<p>同样是抽象，新设计同样也可以用抽象类的方式：创建一个 <strong>Developer</strong> 的抽象类并提供一个 <code>writeCode</code> 方法，让不同的开发者类继承于它并按照自己的方式实现 <code>writeCode</code> 方法。这样一来，在 <strong>Project</strong> 类的构造方法就是传入以 <strong>Developer</strong> 类型为元素的数组了。有兴趣的小伙伴可以自己实现一下。</p>
+<p>下面来看一下这两个设计的 UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h3 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h3><p>未实践依赖倒置原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190215212759.jpg"></p>
+<p>实践了依赖倒置原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190215212829.jpg"></p>
+<blockquote>
+<p>在实践了依赖倒置原则的 UML 类图中，我们可以看到 <strong>Project</strong> 仅仅依赖于新的接口，而且低层的<strong>FrondEndDevelope</strong> 和 <strong>BackEndDevelope</strong> 类按照自己的方式实现了这个接口，通过接口解除了原有的依赖。（在 UML 类图中，虚线三角箭头表示接口实线，由实现方指向接口）</p>
+</blockquote>
+<h2 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h2><p>今后在处理高低层模块（类）交互的情景时，尽量将二者的依赖通过抽象的方式解除掉，实现方式可以是通过接口也可以是抽象类的方式。</p>
+<p>在实际编程中，我们一般需要做到如下：</p>
+<ul>
+<li>每个类尽量都要有抽象类或接口，或者两者都有。这是依赖倒置的基本要求，接口和抽象类都是属于抽象的，有了抽象才能依赖倒置；</li>
+<li>变量的声明类型尽量是抽象类或接口；</li>
+<li>使用继承时遵循里氏替换原则；</li>
+<li>任何类都不应该从具体类派生；</li>
+<li>尽量不要复写基类的方法。</li>
+</ul>
+<p>依赖倒置原则的核心就是要我们<strong>面向接口编程</strong>，通过抽象（接口或者抽象类）使各个类或者模块的实现彼此独立，不互相影响，实现模块间的松耦合。</p>
+<p>涉及的设计模式有：工厂方法模式、模板方法模式等。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>工具类：FPSDisplay</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="这是一个基于 CADisplayLink，用于实时显示屏幕的当前帧数的指示器。
+
+CADisplayLink 是 CoreAnimation 提供的另一个类似于 NSTimer 的类，它总是在屏幕完成一次更新之前启动，它的接口设计的和 NSTimer 很类似，所以它实际上就是一个内置实现的替代，但是">
+  
+  
+  <meta property="og:title" content="工具类：FPSDisplay"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        工具类：FPSDisplay
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-09T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-10
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/iOS/">iOS</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/iOS/">iOS</a>
+
+
+    </div>
+    <hr>
+    
+      
+    
+    <div class="picture-container">
+      
+    </div>
+    <p>这是一个基于 <strong>CADisplayLink</strong>，用于实时显示屏幕的当前帧数的指示器。</p>
+<blockquote>
+<p><strong>CADisplayLink</strong> 是 <strong>CoreAnimation</strong> 提供的另一个类似于 <strong>NSTimer</strong> 的类，它总是在屏幕完成一次更新之前启动，它的接口设计的和 <strong>NSTimer</strong> 很类似，所以它实际上就是一个内置实现的替代，但是和 <code>timeInterval</code> 以秒为单位不同，<strong>CADisplayLink</strong> 有一个整型的 <code>frameInterval</code> 属性，指定了间隔多少帧之后才执行。默认值是1，意味着每次屏幕更新之前都会执行一次。但是如果动画的代码执行起来超过了六十分之一秒，你可以指定 <code>frameInterval</code> 为2，就是说动画每隔一帧执行一次（一秒钟30帧）或者3，也就是一秒钟20次，等等。</p>
+</blockquote>
+<p>我们知道现在 iPhone 的 FPS 是60，也就是每秒刷新60帧，如果低于60帧的话那就是掉帧了，如果掉帧掉的多的话就会明显出现卡顿。当然该工具是参考 YYKit-Demo 中所实现的，对其进行简化和封装，将其提取成了一个单独的组件，便于我们在以后的应用中引入。</p>
+<p><strong>FPSDisplay</strong> 的使用很简单，只需要在 <strong>AppDelegate</strong> 的 <code>didFinishLaunchingWithOptions:</code> 方法中添加即可。因为 <strong>FPSDisplay</strong> 是显示在 <strong>keyWindow</strong> 上的，所以在 <strong>FPSDisplay</strong> 初始化时要保证你的 APP 已经有了 <strong>keyWindow</strong>。进行下面初始化后，在你的 APP 的左下方就会出现一个图标来实时地显示 FPS。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AppDelegate</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</span><br><span class="line">    <span class="comment">// Override point for customization after application launch.</span></span><br><span class="line">    <span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[<span class="built_in">UIScreen</span> mainScreen].bounds];</span><br><span class="line">    <span class="keyword">self</span>.window.rootViewController = [[ViewController alloc] init];</span><br><span class="line">    <span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    [<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line">    </span><br><span class="line">    [FPSDisplay sharedFPSDisplay];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>FPSDisplay</strong> 的实现并不麻烦，主要是 <strong>CADisplayLink</strong> 的使用，将创建 <strong>CADisplayLink</strong> 对象添加到 <strong>mainRunLoop</strong> 中，就可以以此来计算 FPS 了。下方是 <strong>FPSDisplay</strong> 的核心代码。在每次进行屏幕刷新时都会执行下面的 <code>tick:</code> 方法，我们可以计算 1秒内刷新的次数，也就是所谓的 FPS。代码比较简单，在此就不做过多的赘述了，详细的代码见 <a target="_blank" rel="noopener" href="https://github.com/zhongbisheng/FPSDisplay">GitHub</a>。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

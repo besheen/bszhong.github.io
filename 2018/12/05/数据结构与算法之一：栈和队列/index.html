@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>数据结构与算法之一：栈和队列</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="概述栈和队列在数据结构中是比较重要的一个数据结构。其实对于栈和队列并不需要太深入的介绍，栈和队列的核心内容是栈是先进后出、队列是先进先出。在实际开发中有些场景也可能会用到，比如APP中用户可以撤销操作，比如下棋APP中的悔棋操作，返回上一步就是先进后出（后进先出），也就是栈的特性。比如在销售APP中">
+  
+  
+  <meta property="og:title" content="数据结构与算法之一：栈和队列"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        数据结构与算法之一：栈和队列
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-12-05T11:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-12-05
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/数据结构与算法/">数据结构与算法</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/iOS/">iOS</a>·<a href="/tags/数据结构与算法/">数据结构与算法</a>·<a href="/tags/Swift/">Swift</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF%E5%8F%8A%E4%BB%A3%E7%A0%81"><span class="toc-text">实现思路及代码</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>栈和队列在数据结构中是比较重要的一个数据结构。其实对于栈和队列并不需要太深入的介绍，栈和队列的核心内容是<strong>栈是先进后出、队列是先进先出</strong>。在实际开发中有些场景也可能会用到，比如APP中用户可以撤销操作，比如下棋APP中的悔棋操作，返回上一步就是先进后出（后进先出），也就是栈的特性。比如在销售APP中，为先下订单的用户先出票，就需要用到队列。当然这两个只是在简单场景下的情况，实际开发中可能更复杂，比如售票APP为会员用户优先出票等。</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/stack0.png"></p>
+<p>接下来就通过 Swift 去实现栈和队列。</p>
+<h2 id="实现思路及代码"><a href="#实现思路及代码" class="headerlink" title="实现思路及代码"></a>实现思路及代码</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Stack</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> items <span class="operator">=</span> [<span class="type">Element</span>]()</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> items.count</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> items.isEmpty</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 查看栈顶的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">peek</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> items.last</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">push</span>(<span class="keyword">_</span> <span class="params">item</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        items.append(item)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">pop</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> items.popLast()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Queue</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Element</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span></span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">enqueue</span>(<span class="keyword">_</span> <span class="params">e</span>: <span class="type">Element</span>)</span></span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeue</span>()</span> -&gt; <span class="type">Element</span>?</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getFront</span>()</span> -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// dequeue()算法复杂度为O(n)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArrayQueue</span>&lt;<span class="title">Element</span>&gt;: <span class="title">Queue</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> items <span class="operator">=</span> [<span class="type">Element</span>]()</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> items.count</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> items.isEmpty</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">enqueue</span>(<span class="keyword">_</span> <span class="params">e</span>: <span class="type">Element</span>)</span> &#123;</span><br><span class="line">        items.append(e)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">dequeue</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">if</span> items.isEmpty &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> items.removeFirst()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getFront</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> items.first</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// dequeue()均摊复杂度为O(1)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoopQueue</span>: <span class="title">Queue</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> items: <span class="type">NSMutableArray</span>!</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> front <span class="operator">=</span> <span class="number">0</span>  <span class="comment">// 队首</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> tail <span class="operator">=</span> <span class="number">0</span>  <span class="comment">// 队尾</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> count <span class="operator">=</span> <span class="number">0</span>  <span class="comment">// 数组的空间大小</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> size <span class="operator">=</span> <span class="number">0</span>  <span class="comment">// 队列元素个数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 循环队列会有意的浪费一个内存空间大小，所以在声明数组空间大小的时候需要 +1 操作。</span></span><br><span class="line">    <span class="comment">/// - Parameter capacity: 队列的空间大小</span></span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">capacity</span>: <span class="type">Int</span>)</span> &#123;</span><br><span class="line">        count <span class="operator">=</span> capacity <span class="operator">+</span> <span class="number">1</span></span><br><span class="line">        items <span class="operator">=</span> <span class="type">NSMutableArray</span>(capacity: capacity <span class="operator">+</span> <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getCapacity</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> count <span class="operator">-</span> <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">isEmpty</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> front <span class="operator">==</span> tail</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getSize</span>()</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> size</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">enqueue</span>(<span class="keyword">_</span> <span class="params">e</span>: <span class="keyword">Any</span>)</span> &#123;</span><br><span class="line">        <span class="comment">// 判断队列是否已满，进行扩容操作</span></span><br><span class="line">        <span class="keyword">if</span> (tail <span class="operator">+</span> <span class="number">1</span>) <span class="operator">%</span> count <span class="operator">==</span> front &#123;</span><br><span class="line">            resize(newCapacity: getCapacity() <span class="operator">*</span> <span class="number">2</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        items[tail] <span class="operator">=</span> e</span><br><span class="line">        tail <span class="operator">=</span> (tail <span class="operator">+</span> <span class="number">1</span>) <span class="operator">%</span> count</span><br><span class="line">        size <span class="operator">+=</span> <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">dequeue</span>()</span> -&gt; <span class="keyword">Any</span><span class="operator">?</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> isEmpty() &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> temp <span class="operator">=</span> items[front]</span><br><span class="line">        front <span class="operator">=</span> (front <span class="operator">+</span> <span class="number">1</span>) <span class="operator">%</span> count</span><br><span class="line">        size <span class="operator">-=</span> <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 进行缩容操作</span></span><br><span class="line">        <span class="keyword">if</span> size <span class="operator">==</span> getCapacity() <span class="operator">/</span> <span class="number">4</span> <span class="operator">&amp;&amp;</span> getCapacity() <span class="operator">/</span> <span class="number">2</span> <span class="operator">!=</span> <span class="number">0</span> &#123;</span><br><span class="line">            resize(newCapacity: getCapacity() <span class="operator">/</span> <span class="number">2</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> temp</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getFront</span>()</span> -&gt; <span class="keyword">Any</span><span class="operator">?</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> isEmpty() &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> items[front]</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">resize</span>(<span class="params">newCapacity</span>: <span class="type">Int</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> newItems <span class="operator">=</span> <span class="type">NSMutableArray</span>(capacity: newCapacity <span class="operator">+</span> <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span><span class="operator">..&lt;</span>size &#123;</span><br><span class="line">            <span class="comment">// 在items中的元素对于newItems中的元素的索引值有front偏移，又因为是循环队列，(index + front)有可能会超过items范围，所以这个索引需要循环起来</span></span><br><span class="line">            newItems[index] <span class="operator">=</span> items[(index <span class="operator">+</span> front) <span class="operator">%</span> count];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        items <span class="operator">=</span> newItems</span><br><span class="line">        front <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">        tail <span class="operator">=</span> size</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

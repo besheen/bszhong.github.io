@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式（四）：行为型设计模式</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="本篇是面向对象设计模式系列文章的第四篇，讲解的是设计模式中的行为型模式：
+
+观察者模式
+策略模式
+命令模式
+责任链模式
+中介者模式
+备忘录模式
+访问者模式
+模版方法模式
+
+
+本篇将使用 Swift 语言来实现下面所介绍的设计模式（语言是载体，思想是相通的嘛）。
+
+一、观察者模式（Observer）定">
+  
+  
+  <meta property="og:title" content="面向对象设计模式（四）：行为型设计模式"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式（四）：行为型设计模式
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-19T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-20
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%EF%BC%88Observer%EF%BC%89"><span class="toc-text">一、观察者模式（Observer）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E4%B8%8E%E7%B1%BB%E5%9B%BE"><span class="toc-text">成员与类图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-text">代码示例</span></a></li></ol></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <p>本篇是面向对象设计模式系列文章的第四篇，讲解的是设计模式中的行为型模式：</p>
+<ul>
+<li>观察者模式</li>
+<li>策略模式</li>
+<li>命令模式</li>
+<li>责任链模式</li>
+<li>中介者模式</li>
+<li>备忘录模式</li>
+<li>访问者模式</li>
+<li>模版方法模式</li>
+</ul>
+<blockquote>
+<p>本篇将使用 Swift 语言来实现下面所介绍的设计模式（语言是载体，思想是相通的嘛）。</p>
+</blockquote>
+<h1 id="一、观察者模式（Observer）"><a href="#一、观察者模式（Observer）" class="headerlink" title="一、观察者模式（Observer）"></a>一、观察者模式（Observer）</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><blockquote>
+<p>定义了对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。</p>
+</blockquote>
+<p><strong>观察者模式</strong>定义了对象之间的一对多依赖，这样一来，当一个对象改变状态时，它的所有依赖者都会收到通知并自动更新。</p>
+<h2 id="成员与类图"><a href="#成员与类图" class="headerlink" title="成员与类图"></a>成员与类图</h2><p>观察者模式共有四个成员：</p>
+<ul>
+<li>被观察对象接口（<em><strong>Observable</strong></em>）：定义了注册、移除和发通知方法，以及保存多个观察者的数组；</li>
+<li>观察者接口（<em><strong>Observer</strong></em>）：定义了接收到通知后要执行的方法；</li>
+<li>被观察对象（<strong>ConcreteObservable</strong>）：实现被观察对象接口定义的方法和属性；</li>
+<li>观察者（<strong>ConcreteObserver</strong>）：实现观察者接口。</li>
+</ul>
+<p>下面通过类图来看一下各个成员之间的关系：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190301210638.png"></p>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p>城市有一间非常有名的面包店，这间面包店所烘培出来的甜点总是那么吸引人，特别是他们的 Today’s Special 让人连续吃上一个礼拜都不会腻，似乎每一天的 Today’s Special 都是为某种口味的爱好者所提供的。</p>
+<p>由于面包坊的 Today’s Special 数量有限，并且出炉的时间也不一定，所以许多企业开始请求该面包坊能不能在每一天出炉 Today’s Special 的时候，通知大家一下。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>

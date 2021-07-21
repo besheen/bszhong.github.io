@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  <meta name="referrer" content="unsafe-url">
+  
+  <title>面向对象设计模式之设计原则篇（二）：单一职责原则</title>
+  <meta name="author" content="John Doe">
+  <meta name="description" content="定义
+A class should have a single responsibility, where a responsibility is nothing but a reason to change.
+一个类只允许有一个职责，即只有一个导致该类变化的原因。
+
+定义的解读：
+
+类职责的变化往">
+  
+  
+  <meta property="og:title" content="面向对象设计模式之设计原则篇（二）：单一职责原则"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Hexo"/>
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      <div class="behind">
+  <a href="/" class="back black-color">
+    <svg class="i-close" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+        <path d="M2 30 L30 2 M30 30 L2 2"></path>
+    </svg>
+  </a>
+  
+</div>
+
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        面向对象设计模式之设计原则篇（二）：单一职责原则
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2018-09-15
+</time>
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/categories/设计模式/">设计模式</a>
+
+
+
+
+    
+    &nbsp;
+    <svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <circle cx="24" cy="8" r="2"></circle>
+      <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+    </svg>
+    &nbsp;
+    <a href="/tags/设计模式/">设计模式</a>
+
+
+    </div>
+    <hr>
+    
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%94%B1%E6%9D%A5"><span class="toc-text">问题由来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-text">代码讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E7%82%B9"><span class="toc-text">需求点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">不好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%83%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">较好的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE%E5%AF%B9%E6%AF%94"><span class="toc-text">UML 类图对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E8%B7%B5"><span class="toc-text">如何实践</span></a></li></ol>
+    
+    <div class="picture-container">
+      
+    </div>
+    <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
+<p>A class should have a single responsibility, where a responsibility is nothing but a reason to change.</p>
+<p>一个类只允许有一个职责，即只有一个导致该类变化的原因。</p>
+</blockquote>
+<p>定义的解读：</p>
+<ul>
+<li>类职责的变化往往就是导致类变化的原因，也就是说如果一个类具有多种职责，就会有多种导致这个类变化的原因，从而导致这个类的维护变得困难；</li>
+<li>往往在软件开发中随着需求的不断增加，可能会给原来的类添加一些本来不属于它的一些职责，从而违反了单一职责原则。如果我们发现当前类的职责不仅仅有一个，就应该将本来不属于该类真正的职责分离出去；</li>
+<li>不仅仅是类，函数（方法）也要遵循单一职责原则，即：一个函数只做一件事情。如果发现一个函数里面有不同的任务，则需要将不同的任务以另一个函数的形式分离出去。</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>如果类与方法的职责划分得很清晰，不但可以提高代码的可读性，更实际性地降低了程序出错的风险，因为清晰的代码会让 bug 无处藏身，也有利于 bug 的追踪，也就降低了程序的维护成本。</li>
+</ul>
+<h1 id="问题由来"><a href="#问题由来" class="headerlink" title="问题由来"></a>问题由来</h1><p>类T负责两个不同的职责：职责 P1，职责 P2。当由于职责 P1 需求发生改变而需要修改类 T 时，，由于类 T 承担的职责有多个（P1，P2），职责 P1 的变化有可能会导致原本运行正常的职责 P2 功能发生故障。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>遵循单一职责原则。分别建立两个类 T1、T2，使 T1 完成职责 P1 功能，T2 完成职责 P2 功能。这样，当修改类 T1 时，不会使职责 P2 发生故障风险；同理，当修改 T2 时，也不会使职责 P1 发生故障风险。</p>
+<p>说到单一职责原则，很多人都会不屑一顾。因为它太简单了。稍有经验的程序员即使从来没有读过设计模式、从来没有听说过单一职责原则，在设计软件时也会自觉的遵守这一重要原则，因为这是常识。在软件编程中，谁也不希望因为修改了一个功能导致其他的功能发生故障。而避免出现这一问题的方法便是遵循单一职责原则。虽然单一职责原则如此简单，并且被认为是常识，但是即便是经验丰富的程序员写出的程序，也会有违背这一原则的代码存在。为什么会出现这种现象呢？因为有职责扩散。</p>
+<p>所谓职责扩散，就是因为某种原因，职责P被分化为粒度更细的职责 P1 和 P2。</p>
+<p>比如：类 T 只负责一个职责 P，这样设计是符合单一职责原则的。后来由于某种原因，也许是需求变更了，也许是程序的设计者境界提高了，需要将职责 P 细分为粒度更细的职责 P1，P2，这时如果要使程序遵循单一职责原则，需要将类 T 也分解为两个类 T1 和 T2，分别负责 P1、P2 两个职责。但是在程序已经写好的情况下，这样做简直太费时间了。所以，简单的修改类 T，用它来负责两个职责是一个比较不错的选择，虽然这样做有悖于单一职责原则。（这样做的风险在于职责扩散的不确定性，因为我们不会想到这个职责 P，在未来可能会扩散为 P1，P2，P3，P4……Pn。所以记住，在职责扩散到我们无法控制的程度之前，立刻对代码进行重构。）</p>
+<h1 id="代码讲解"><a href="#代码讲解" class="headerlink" title="代码讲解"></a>代码讲解</h1><p>单一职责原则的 demo 比较简单，通过对象（属性）的设计上讲解已经足够，不需要具体的客户端调用。我们先看一下需求点：</p>
+<h3 id="需求点"><a href="#需求点" class="headerlink" title="需求点"></a>需求点</h3><p>初始需求：需要创造一个员工类，这个类有员工的一些基本信息。</p>
+<p>新增需求：增加两个方法</p>
+<ul>
+<li>判定员工在今年是否升职；</li>
+<li>计算员工的薪水。</li>
+</ul>
+<p>先来看一下不好的设计：</p>
+<h3 id="不好的设计"><a href="#不好的设计" class="headerlink" title="不好的设计"></a>不好的设计</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== Employee.h ==================</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Employee</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//============ 初始需求 ============</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;       <span class="comment">// 员工姓名</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *address;    <span class="comment">// 员工住址</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *employeeID; <span class="comment">// 员工ID</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//============ 新需求 ============</span></span><br><span class="line"><span class="comment">// 计算薪水</span></span><br><span class="line">- (<span class="keyword">double</span>)calculateSalary;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 今年是否晋升</span></span><br><span class="line">- (<span class="built_in">BOOL</span>)willGetPromotionThisYear;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>由上面的代码可以看出：</p>
+<ul>
+<li>在初始需求下，我们创建了 <strong>Employee</strong> 这个员工类，并声明了3个员工信息的属性：姓名、住址和员工ID；</li>
+<li>在新需求下，两个方法直接加到了员工类里面。</li>
+</ul>
+<p>新需求的做法看似没有问题，因为都是和员工有关的，但却违反了单一职责原则：<strong>因为这两个方法并不是员工本身的职责</strong>：</p>
+<ul>
+<li><code>calculateSalary</code> 这个方法的职责是属于会计部门的，薪水的计算是会计部门负责；</li>
+<li><code>willPromotionThisYear</code> 这个方法的职责是属于人事部门的，考核与晋升机制是人事部门负责。</li>
+</ul>
+<p>而上面的设计将本来不属于员工自己的职责加进了员工类里面，而这个类的设计初衷（原始职责）就是单纯地保留员工的一些信息而已。因此这么做就是给这个类引入了新的职责，故此设计违反了单一职责原则。</p>
+<p>我们可以简单设想一下这么做的后果是什么：如果员工的晋升机制变了，或者税收政策等影响员工工资的因素变了，我们还需要修改当前这个类。</p>
+<p>那么怎么做才能不违反单一职责原则呢？我们需要将这两个方法（责任）分离出去，让本应该处理这类任务的类来处理。</p>
+<h3 id="较好的设计"><a href="#较好的设计" class="headerlink" title="较好的设计"></a>较好的设计</h3><p>我们保留员工类的基本信息，接着创建新的<strong>会计部门类</strong>：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== FinancialApartment.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Employee.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//会计部门类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FinancialApartment</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//计算薪水</span></span><br><span class="line">- (<span class="keyword">double</span>)calculateSalary:(Employee *)employee;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>和<strong>人事部门类</strong>：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//================== HRApartment.h ==================</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;Employee.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//人事部门类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">HRApartment</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//今年是否晋升</span></span><br><span class="line">- (<span class="built_in">BOOL</span>)willGetPromotionThisYear:(Employee*)employee;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>通过创建了两个分别处理薪水和晋升的部门：会计部门 <strong>FinancialApartment</strong> 和人事部门 <strong>HRApartment</strong>，把两个任务（责任）分离了出去，让本该处理这些职责的类来处理这些职责。</p>
+<p>这样一来，不仅仅在此次新需求中满足了单一职责原则，以后如果还要增加人事部门和会计部门处理的任务，就可以直接在这两个类里面添加即可。</p>
+<p>下面来看一下这两个设计的 UML 类图，可以更形象地看出两种设计上的区别：</p>
+<h3 id="UML-类图对比"><a href="#UML-类图对比" class="headerlink" title="UML 类图对比"></a>UML 类图对比</h3><p>未实践单一职责原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190215170951.jpg"></p>
+<p>实践了单一职责原则：</p>
+<p><img src="https://raw.githubusercontent.com/zhongbisheng/blog_image/master/20190215171026.jpg"></p>
+<blockquote>
+<p>可以看到，在实践了单一职责原则的 UML 类图中，不属于 <strong>Employee</strong> 的两个职责被分离到 <strong>FinancialApartment</strong> 和 <strong>HRApartment</strong>。（在 UML 中，虚线箭头表示依赖关系，常用在方法参数等，由依赖方指向被依赖方）</p>
+</blockquote>
+<p>上面说过除了类要遵循单一职责设计原则之外，在函数（方法）的设计上也要遵循单一职责原则。因函数的单一职责原则理解起来比较容易，故在这里就不提供 demo 和 UML 类图了。</p>
+<p>可以简单举一个例子：</p>
+<p>APP的默认导航栏的样式是这样的：</p>
+<ul>
+<li>白色底</li>
+<li>黑色标题</li>
+<li>底部有阴影</li>
+</ul>
+<p>那么创建默认导航栏的伪代码可能是这样子的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认样式的导航栏</span></span><br><span class="line">- (<span class="keyword">void</span>)createDefaultNavigationBarWithTitle:(<span class="built_in">NSString</span> *)title &#123;</span><br><span class="line">    <span class="comment">// create white color background view</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// create black color title</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// create shadow bottom</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们可以用这个方法统一创建默认的导航了了。但是过不久又有新的需求来了，有的页面的导航栏需要做成透明的，因此需要一个透明样式的导航栏：</p>
+<ul>
+<li>透明底</li>
+<li>白色标题</li>
+<li>底部无阴影</li>
+</ul>
+<p>针对这个需求，我们可以新增一个方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 透明样式的导航栏</span></span><br><span class="line">- (<span class="keyword">void</span>)createTransParentNavigationBarWithTitle:(<span class="built_in">NSString</span> *)title &#123;</span><br><span class="line">    <span class="comment">// create transparent color background view</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// create white color title</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看出问题来了么？在这两个方法里面，创造 background view 和 title color title 的方法的差别仅仅是颜色不同而已，而其他部分的代码是重复的。因此我们应该将这两个方法抽出来：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据传入的颜色参数设置导航栏的背景色</span></span><br><span class="line">- (<span class="keyword">void</span>)createBackgroundViewWithColor:(<span class="built_in">UIColor</span>)color;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据传入的标题字符串和颜色参数设置标题</span></span><br><span class="line">- (<span class="keyword">void</span>)createTitlewWithColorWithTitle:(<span class="built_in">NSString</span> *)title color:(<span class="built_in">UIColor</span>)color;</span><br></pre></td></tr></table></figure>
+
+<p>而且上面的制造阴影的部分也可以作为方法抽出来：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)createShadowBottom;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，原来的两个方法可以写成：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认样式的导航栏</span></span><br><span class="line">- (<span class="keyword">void</span>)createDefaultNavigationBarWithTitle:(<span class="built_in">NSString</span> *)title &#123;</span><br><span class="line">    <span class="comment">// 设置白色背景</span></span><br><span class="line">    [<span class="keyword">self</span> createBackgroundViewWithColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置黑色标题</span></span><br><span class="line">    [<span class="keyword">self</span> createTitlewWithColorWithTitle:title color:[<span class="built_in">UIColor</span> blackColor]];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置底部阴影</span></span><br><span class="line">    [<span class="keyword">self</span> createShadowBottom];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 透明样式的导航栏</span></span><br><span class="line">- (<span class="keyword">void</span>)createTransParentNavigationBarWithTitle:(<span class="built_in">NSString</span> *)title &#123;</span><br><span class="line">    <span class="comment">// 设置透明背景</span></span><br><span class="line">    [<span class="keyword">self</span> createBackgroundViewWithColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置白色标题</span></span><br><span class="line">    [<span class="keyword">self</span> createTitlewWithColorWithTitle:title color:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而且我们也可以将里面的方法拿出来在外面调用也可以：</p>
+<p>设置默认样式的导航栏：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置白色背景</span></span><br><span class="line">[navigationBar createBackgroundViewWithColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置黑色标题</span></span><br><span class="line">[navigationBar createTitlewWithColorWithTitle:title color:[<span class="built_in">UIColor</span> blackColor]];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置阴影</span></span><br><span class="line">[navigationBar createShadowBottom];</span><br></pre></td></tr></table></figure>
+
+<p>设置透明样式的导航栏：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置透明色背景</span></span><br><span class="line">[navigationBar createBackgroundViewWithColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置白色标题</span></span><br><span class="line">[navigationBar createTitlewWithColorWithTitle:title color:[<span class="built_in">UIColor</span> whiteColor]];</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，无论写在一个大方法里面调用或是分别在外面调用，都能很清楚地看到导航栏的每个元素是如何生成的，因为每个职责都分配到了一个单独的方法里面。而且还有一个好处是，透明导航栏如果遇到浅色背景的话，使用白色字体不如使用黑色字体好，所以遇到这种情况我们可以在 <code>createTitlewWithColorWithTitle:color:</code> 方法里面传入黑色色值。而且今后可能还会有更多的导航栏样式，那么我们只需要分别改变传入的色值即可，不需要有大量的重复代码了，修改起来也很方便。</p>
+<h1 id="如何实践"><a href="#如何实践" class="headerlink" title="如何实践"></a>如何实践</h1><p>对于上面的员工类的例子，或许是因为我们先入为主，知道一个公司的合理组织架构，觉得这么设计理所当然。但是在实际开发中，我们很容易会将不同的责任揉在一起，这点还是需要开发者注意的。</p>
+
+
+  </article>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+    
+
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <svg class="i-caret-right" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+            <path d="M10 30 L26 16 10 2 Z"></path>
+        </svg>
+        </a>
+        © XXX 2016-2020
+    </div>
+    <div class="secondrow">
+        <a target="_blank" rel="noopener" href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>
